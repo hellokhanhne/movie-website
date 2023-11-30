@@ -1,0 +1,18 @@
+.banner-wrapper {
+  .swiper-button-prev {
+    color: var(--primary-color);
+    top: 5%;
+  }
+  .swiper-button-prev:after {
+    font-size: 24px;
+  }
+
+  .swiper-button-next {
+    color: var(--primary-color);
+    top: 5%;
+    left: 40px;
+  }
+  .swiper-button-next:after {
+    font-size: 24px;
+  }
+}
