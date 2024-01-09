@@ -590,7 +590,7 @@ const WatchMovieTv = () => {
                         )}
 
                         {/* action */}
-                        {/* <div className="flex justify-start mr-6 mt-[24px]">
+                        <div className="flex justify-start mr-6 mt-[24px]">
                             <div className="ml-[50px] mr-[32px] group relative w-[50px] h-[50px] cursor-pointer duration-300">
                                 <div className="absolute z-[2]">
                                     <Tooltip title={t("Like")}>
@@ -614,7 +614,7 @@ const WatchMovieTv = () => {
                                     </Tooltip>
                                 </div>
                             </div>
-                        </div> */}
+                        </div>
 
                         {/* commment */}
                         <div>
