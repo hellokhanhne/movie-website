@@ -18,88 +18,88 @@ import { v4 as uuidv4 } from "uuid";
 import { Timestamp } from "firebase/firestore";
 
 function App() {
-  const stateContext = useContext(UserContext);
-  const { localeGlobal, currentDataUser } = stateContext;
-  const [globalLocale, setGlobalLocale] = localeGlobal;
-  const [dataUser] = currentDataUser;
-  let mainContent = useRoutes(RouteList);
-  const location = useLocation();
-  const { handlePopupNotification } = useNotification();
-  const { handleAddNotification } = useFirebaseRealTime();
+    const stateContext = useContext(UserContext);
+    const { localeGlobal, currentDataUser } = stateContext;
+    const [globalLocale, setGlobalLocale] = localeGlobal;
+    const [dataUser] = currentDataUser;
+    let mainContent = useRoutes(RouteList);
+    const location = useLocation();
+    const { handlePopupNotification } = useNotification();
+    const { handleAddNotification } = useFirebaseRealTime();
 
-  useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
+    useEffect(() => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
+    }, [location.pathname]);
+    useEffect(() => {
+        AOS.init({
+            once: true,
+            initClassName: "aos-init",
+            easing: "ease-in-sine",
+        });
+    }, []);
+
+    // FCM
+    useEffect(() => {
+        // getTokenPermision();
+        // const channel = new BroadcastChannel("notifications");
+        // channel.addEventListener("message", (event) => {
+        //   console.log("Receive background: ", event.data);
+        // });
+    }, []);
+
+    // nhận thông báo when đang sử dụng web site
+    onMessage(messagingMovie, async (payload) => {
+        const { messageId, notification } = payload;
+        try {
+            await handleAddNotification(
+                {
+                    noti_id: messageId,
+                    description: notification.body,
+                    title: notification.title,
+                    createAt: Timestamp.fromDate(new Date()),
+                    isReview: false,
+                },
+                dataUser.uid
+            );
+            handlePopupNotification(payload.notification.body, "info");
+        } catch (error) {
+            console.log("error");
+        }
     });
-  }, [location.pathname]);
-  useEffect(() => {
-    AOS.init({
-      once: true,
-      initClassName: "aos-init",
-      easing: "ease-in-sine",
-    });
-  }, []);
 
-  // FCM
-  useEffect(() => {
-    getTokenPermision();
-    const channel = new BroadcastChannel("notifications");
-    channel.addEventListener("message", (event) => {
-      console.log("Receive background: ", event.data);
-    });
-  }, []);
+    // nhận thông báo when không ở trong ứng dụng web site
 
-  // nhận thông báo when đang sử dụng web site
-  onMessage(messagingMovie, async (payload) => {
-    const { messageId, notification } = payload;
-    try {
-      await handleAddNotification(
-        {
-          noti_id: messageId,
-          description: notification.body,
-          title: notification.title,
-          createAt: Timestamp.fromDate(new Date()),
-          isReview: false,
-        },
-        dataUser.uid
-      );
-      handlePopupNotification(payload.notification.body, "info");
-    } catch (error) {
-      console.log("error");
-    }
-  });
+    const channel = new BroadcastChannel("my-channel");
+    channel.onmessage = async (event) => {
+        if (event.data.type === "message-from-sw") {
+            const { payload } = event?.data;
+            try {
+                await handleAddNotification(
+                    {
+                        noti_id: uuidv4(),
+                        description: payload.body,
+                        title: payload.title,
+                        createAt: Timestamp.fromDate(new Date()),
+                        isReview: false,
+                    },
+                    dataUser.uid
+                );
+            } catch (error) {
+                console.log("error", error);
+            }
+        }
+    };
 
-  // nhận thông báo when không ở trong ứng dụng web site
+    return (
+        <ConfigProvider locale={globalLocale === "vi-VN" ? viVN : enUS}>
+            <>
+                <ToastContainer limit={3} />
 
-  const channel = new BroadcastChannel("my-channel");
-  channel.onmessage = async (event) => {
-    if (event.data.type === "message-from-sw") {
-      const { payload } = event?.data;
-      try {
-        await handleAddNotification(
-          {
-            noti_id: uuidv4(),
-            description: payload.body,
-            title: payload.title,
-            createAt: Timestamp.fromDate(new Date()),
-            isReview: false,
-          },
-          dataUser.uid
-        );
-      } catch (error) {
-        console.log("error", error);
-      }
-    }
-  };
-
-  return (
-    <ConfigProvider locale={globalLocale === "vi-VN" ? viVN : enUS}>
-      <>
-        <ToastContainer limit={3} />
-
-        <div className="text-2xl text-[#989898] font-poppin">
-          {/* <Routes>
+                <div className="text-2xl text-[#989898] font-poppin">
+                    {/* <Routes>
         {RouteList.map((item, index) => {
           let Page = item.component;
           const checkLayout = item.layout;
@@ -129,12 +129,12 @@ function App() {
           );
         })}
       </Routes> */}
-          {mainContent}
-          {/* back to top */}
-        </div>
-      </>
-    </ConfigProvider>
-  );
+                    {mainContent}
+                    {/* back to top */}
+                </div>
+            </>
+        </ConfigProvider>
+    );
 }
 
 export default App;

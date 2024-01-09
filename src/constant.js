@@ -10,11 +10,11 @@ export const TYPEMODAL = {
 };
 
 export const firebaseConfig = {
-    apiKey: "AIzaSyDVDgpjwifnO-sAvt1D1wvpTWYhyDc1mSY",
-    authDomain: "moviefilm-152c9.firebaseapp.com",
-    databaseURL: "https://moviefilm-152c9-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "moviefilm-152c9",
-    storageBucket: "moviefilm-152c9.appspot.com",
-    messagingSenderId: "18882498729",
-    appId: "1:18882498729:web:f6e4604adae723d85359b8",
+    apiKey: "AIzaSyCMYWcgbAeZOGQSRjDKZPIEp96RYfa9eno",
+    authDomain: "moviewebsite-df20c.firebaseapp.com",
+    databaseURL: "https://moviewebsite-df20c-default-rtdb.firebaseio.com",
+    projectId: "moviewebsite-df20c",
+    storageBucket: "moviewebsite-df20c.appspot.com",
+    messagingSenderId: "411917013908",
+    appId: "1:411917013908:web:6ee20d39eb037d475d3581",
 };
